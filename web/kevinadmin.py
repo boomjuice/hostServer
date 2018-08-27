@@ -10,9 +10,15 @@ class TaskLogAdmin(BaseKevinAdmin):
 
 class UserAdmin(BaseKevinAdmin):
     list_display = ['id', 'email', 'name']
+    filter_horizontal = ['user_permissions', 'host_to_remote_users', 'host_groups']
+    checkbox_fields = ['superuser_status', 'is_active', 'is_staff']
 
 
-site.register(UserProfile)
+class HostAdmin(BaseKevinAdmin):
+    list_display = ['name', 'ip_address', 'port', 'idc']
+
+
+site.register(UserProfile, UserAdmin)
 site.register(AuditLog)
 site.register(TaskLogDetail, TaskLogAdmin)
 site.register(Tasks)

@@ -13,6 +13,7 @@ class BaseKevinAdmin(object):
     filter_horizontal = []
     list_per_page = 10
     actions = []
+    checkbox_fields =[]
     default_actions = ['delete_selected_obj',]
 
     def delete_selected_obj(self, request, queryset):

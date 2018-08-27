@@ -16,7 +16,8 @@ def create_dynamic_model_form(admin_class, form_add=False):
     def __new__(cls, *args, **kwargs):
         for field_name in cls.base_fields:
             field_obj = cls.base_fields[field_name]
-            field_obj.widget.attrs.update({'class': 'form-control'})
+            if field_name not in admin_class.checkbox_fields:
+                field_obj.widget.attrs.update({'class': 'form-control'})
             # if field_name in admin_class.readonly_fields:
             #     field_obj.widget.attrs.update({'disabled': 'true'})
 
