@@ -22,5 +22,8 @@ urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^login/$', views.acc_login, name='acc_login'),
     url(r'^logout/$', views.acc_logout, name='acc_logout'),
+    url(r'^web-ssh/$', views.web_ssh, name='web_ssh'),
+    url(r'^batch-task-mgr/$', views.batch_task_mgr, name='batch_task_mgr'),
+    url(r'^get-task-result/$', views.get_task_result, name='get_task_result'),
     url(r'^batch-cmd-control/$', views.batch_cmd_control, name='batch_cmd_control'),
 ]

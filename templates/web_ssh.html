@@ -1,24 +1,21 @@
-{% extends 'base.html' %}
-{% block content %}
-    {% block right-content %}
-        <div class="content-wrapper">
+{% extends 'index.html' %}
+{% block right-content %}
+    <div class="content-wrapper">
             <!-- Content Header (Page header) -->
             <section class="content-header">
                 <h1>
-                    Page Header
+                    WEB SSH
                     <small>Optional description</small>
                 </h1>
                 <ol class="breadcrumb">
                     <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
-                    <li class="active">首页</li>
+                    <li class="active">WEB_SSH</li>
                 </ol>
             </section>
 
             <!-- Main content -->
             <section class="content">
-
+                <iframe src="http://172.17.67.173:4200/" frameborder="1" style="width: 800px;height: 600px"></iframe>
             </section>
         </div>
-    {% endblock %}
-
 {% endblock %}

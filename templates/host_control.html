@@ -1,80 +1,115 @@
 {% extends 'index.html' %}
 {% block right-content %}
     {% csrf_token %}
-    <div class="row">
-        <div class="col-lg-4">
-            <div class="box box-solid ">
-                <div class="box-header with-border">
-                    <h3 class="box-title">可管理主机组</h3>
-                    <div class="box-tools pull-right">
-                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                    </div>
-                </div><!-- /.box-header -->
-                <div class="box-body">
-                    <div class="box-group" id="accordion">
-                        {% for host_groups in request.user.host_groups.all %}
-                            <div class="panel box box-primary">
-                            <div class="box-header with-border">
-                                <h4 class="box-title" style="display: block">
-                                    <span onclick="Toggle(this)" style="cursor: pointer;">{{ host_groups }}</span>
-                                    <small class="label  bg-yellow  pull-right"
-                                           onclick="CheckAll(this)">{{ host_groups.host_to_remote_users.count }}</small>
-                                </h4>
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1>
+                批量命令
+                <small>Optional description</small>
+            </h1>
+            <ol class="breadcrumb">
+                <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
+                <li class="active">批量命令</li>
+            </ol>
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="box box-solid ">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">可管理主机组</h3>
+                            <div class="box-tools pull-right">
+                                <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                                </button>
                             </div>
-                            <div id="collapseOne" class="panel-collapse collapse in">
-                                <div class="box-body">
-                                    <ul>
-                                        {% for host_to_obj in host_groups.host_to_remote_users.all %}
-                                            <li><input type="checkbox" name="{{ host_to_obj.id }}" tag="tag">
-                                                {{ host_to_obj.host.name }} ({{ host_to_obj.host.ip_address }})
-                                                @ {{ host_to_obj.remote_user.username }}
-                                            </li>
-                                        {% endfor %}
-                                    </ul>
+                        </div><!-- /.box-header -->
+                        <div class="box-body">
+                            <div class="box-group" id="accordion">
+                                {% for host_groups in request.user.host_groups.all %}
+                                    <div class="panel box box-primary">
+                                    <div class="box-header with-border">
+                                        <h4 class="box-title" style="display: block">
+                                            <span onclick="Toggle(this)"
+                                                  style="cursor: pointer;">{{ host_groups }}</span>
+                                            <small class="label  bg-yellow  pull-right"
+                                                   onclick="CheckAll(this)">{{ host_groups.host_to_remote_users.count }}</small>
+                                        </h4>
+                                    </div>
+                                    <div id="collapseOne" class="panel-collapse collapse in">
+                                        <div class="box-body">
+                                            <ul>
+                                                {% for host_to_obj in host_groups.host_to_remote_users.all %}
+                                                    <li><input type="checkbox" name="{{ host_to_obj.id }}" tag="tag">
+                                                        {{ host_to_obj.host.name }} ({{ host_to_obj.host.ip_address }})
+                                                        @ {{ host_to_obj.remote_user.username }}
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                                <div class="panel box box-success">
+                                    <div class="box-header with-border">
+                                        <h4 class="box-title" style="display: block">
+                                            <span onclick="Toggle(this)" style="cursor: pointer;">未分组主机</span>
+                                            <small class="label  bg-yellow  pull-right"
+                                                   onclick="CheckAll(this)">{{ request.user.host_to_remote_users.count }}</small>
+                                        </h4>
+                                    </div>
+                                    <div id="collapseOne" class="panel-collapse collapse in">
+                                        <div class="box-body">
+                                            <ul>
+                                                {% for host_to_obj in request.user.host_to_remote_users.all %}
+                                                    <li><input type="checkbox" name="{{ host_to_obj.id }}" tag="tag">
+                                                        {{ host_to_obj.host.name }} ({{ host_to_obj.host.ip_address }})
+                                                        @ {{ host_to_obj.remote_user.username }}
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
                                 </div>
                             </div>
-                        {% endfor %}
-                        <div class="panel box box-success">
-                            <div class="box-header with-border">
-                                <h4 class="box-title" style="display: block">
-                                    <span onclick="Toggle(this)" style="cursor: pointer;">未分组主机</span>
-                                    <small class="label  bg-yellow  pull-right"
-                                           onclick="CheckAll(this)">{{ request.user.host_to_remote_users.count }}</small>
-                                </h4>
-                            </div>
-                            <div id="collapseOne" class="panel-collapse collapse in">
-                                <div class="box-body">
-                                    <ul>
-                                        {% for host_to_obj in request.user.host_to_remote_users.all %}
-                                            <li><input type="checkbox" name="{{ host_to_obj.id }}" tag="tag">
-                                                {{ host_to_obj.host.name }} ({{ host_to_obj.host.ip_address }})
-                                                @ {{ host_to_obj.remote_user.username }}
-                                            </li>
-                                        {% endfor %}
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="col-md-8">
-        <div class="box box-solid ">
-            <div class="box-header with-border">
-                <h3 class="box-title">命令操作</h3>
-                <div class="box-tools pull-right">
-                    <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+            <div class="col-md-8">
+                <div class="box box-solid ">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">命令操作</h3>
+                        <div class="box-tools pull-right">
+                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                        </div>
+                    </div><!-- /.box-header -->
+                    <div class="box-body">
+                        <textarea name="cmd" id="cmd_input" rows="2" class="form-control"></textarea>
+                        <button id='task_submit' class="btn bg-purple btn-flat margin pull-right"
+                                onclick="return AjaxCmd()">执行命令
+                        </button>
+                    </div>
                 </div>
-            </div><!-- /.box-header -->
-            <div class="box-body">
-                <textarea name="cmd" id="cmd_input" rows="2" class="form-control"></textarea>
-                <button class="btn bg-purple btn-flat margin pull-right" onclick="return AjaxCmd()">执行命令</button>
+                <div class="box box-solid ">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">任务结果</h3>
+                        <div class="box-tools pull-right">
+                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                        </div>
+                    </div><!-- /.box-header -->
+                    <div class="box-body">
+                        <ul id="task_result_container">
+
+                        </ul>
+                    </div>
+                </div>
             </div>
-        </div>
+        </section>
     </div>
+
     <script>
         function Toggle(ele) {
             $(ele).parent().parent().next().find('ul').fadeToggle()
@@ -108,13 +143,50 @@
             var task_arguments = {
                 'task_type': 'cmd',
                 'cmd': cmd_text,
-                'selected_host': selected_ids
+                'selected_hosts': selected_ids
 
             };
-            $.post("{% url 'batch_cmd_control' %}",
+            $('#task_submit').addClass("disabled");
+            $("#task_result_container").empty();
+            $.post("{% url 'batch_task_mgr' %}",
                 {'task_arguments': JSON.stringify(task_arguments), 'csrfmiddlewaretoken': csrf_token,},
-            function (callback) {
+                function (callback) {
+                    var callback = JSON.parse(callback);
+                    $.each(callback.selected_hosts, function (index, ele) {
+                        var li_ele = "<li log_id='" + ele['id'] +
+                            "' <i class='fa fa-bolt'></i> >> Host:" + ele.host_to_remote_user__host__name +
+                            "(" + ele.host_to_remote_user__host__ip_addr +
+                            ")<span tag='log_status' class='label bg-green'></span></li>";
+                        li_ele += "<pre>waiting for result</pre>";
 
+                        $("#task_result_container").append(li_ele);
+                    });
+
+                    ResultRefreshObj = setInterval(function () {
+
+                        GetTaskResult(callback.task_id);
+
+                    }, 2000)
+                });
+
+        }
+
+        function GetTaskResult(task_id) {
+            $.getJSON("{% url 'get_task_result'  %}", {'task_id': task_id}, function (callback) {
+                var all_task_done = true;
+                $.each(callback, function (index, ele) {
+                    var li_ele = $("li[log_id=" + ele['id'] + "]");
+                    li_ele.find('span').text(ele['status']);
+                    li_ele.next().text(ele['result']);
+                    if (ele['status'] == 0) {
+                        all_task_done = false
+                    }
+                });
+                if (all_task_done) {
+                    clearInterval(ResultRefreshObj);
+                    $("#task_submit").removeClass("disabled");
+                    console.log("-------all task done---------");
+                }
             })
         }
     </script>
