@@ -1,6 +1,5 @@
 import sys, os
 from concurrent.futures import ThreadPoolExecutor
-import time,socket
 import paramiko
 
 
@@ -36,6 +35,7 @@ if __name__ == '__main__':
     sys.path.append(base_dir)
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "堡垒机.settings")
     import django
+
     django.setup()
     from django import conf
     from web.models import *
