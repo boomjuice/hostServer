@@ -1,0 +1,114 @@
+{% load kevinadmin_tags %}
+<form class="form-horizontal" method="post" id="form">
+    {% csrf_token %}
+    {% for field in form_obj %}
+        <div class="form-group">
+            <label class="col-sm-2 control-label">{{ field.label }}:</label>
+            <div class="col-sm-10">
+                {% if field.name in admin_class.filter_horizontal %}
+                    <div class="col-lg-5">
+                        <div class="form-inline" style="margin-bottom: 12px">
+                            <input type="search" style="width: 90%" class="form-control" id="search"
+                                   oninput="FuzzSearch(this)">
+                            <i class="glyphicon glyphicon-search"></i>
+                        </div>
+                        <select class="form-control " multiple id="id_{{ field.name }}_from"
+                                onclick="bindMultipleSelect('id_{{ field.name }}_from', 'id_{{ field.name }}_to')">
+                            {% get_multiple_choices admin_class field.name form_obj as obj_choices %}
+                            {% for obj in obj_choices %}
+                                <option value="{{ obj.id }}">{{ obj }}</option>
+                            {% endfor %}
+                        </select>
+                        <p style="text-align: center">
+                            <a onclick="MoveSelectAll('id_{{ field.name }}_from', 'id_{{ field.name }}_to')">
+                                Choose all
+                                <i class="glyphicon glyphicon-circle-arrow-right"></i></a></p>
+                    </div>
+                    <div class="col-lg-5">
+                        <select id="id_{{ field.name }}_to" style="margin-top: 47px"
+                                tag="tag" multiple class="form-control " name="{{ field.name }}"
+                                onclick="bindMultipleSelect('id_{{ field.name }}_to', 'id_{{ field.name }}_from')">
+                            {% get_multiple_selected_choices field.name form_obj as obj_selected_choices %}
+                            {% for obj in obj_selected_choices %}
+                                <option value="{{ obj.id }}">{{ obj }}</option>
+                            {% endfor %}
+                        </select>
+                        <p style="text-align: center">
+                            <a onclick="MoveSelectAll('id_{{ field.name }}_to', 'id_{{ field.name }}_from')">Remove all
+                                <i class="glyphicon glyphicon-circle-arrow-left"></i></a></p>
+                    </div>
+                {% else %}
+                    {{ field }}
+                {% endif %}
+                <span style="color: orangered"> {{ field.errors.0 }}</span>
+            </div>
+        </div>
+    {% endfor %}
+    {% if not admin_class.form_add %}
+        {% for field in admin_class.readonly_fields %}
+            <div class="form-group">
+                <label class="col-sm-2 control-label">{{ field }}:</label>
+                <div class="col-sm-10">
+                    <p style="margin-top: 8px">{% get_obj_field_val form_obj field %}</p>
+                    <span style="color: orangered"> {{ field.errors.0 }}</span>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+
+    <div class="row" style="margin-left: 100px; border: 1px solid #e7e7e7;padding: 10px 0;">
+        {% if  form_obj.instance %}
+            <div class="col-md-10">
+                <a href="/kevin-admin/{{ app_name }}/{{ table_name }}/{{ form_obj.instance.id }}/delete"
+                   class="btn btn-danger">Delete</a>
+            </div>
+        {% endif %}
+
+        <div class="col-md-1">
+            <button type="submit" class="btn btn-success">Save</button>
+        </div>
+    </div>
+
+</form>
+
+<script src="/static/js/jquery-3.3.1.min.js"></script>
+<script>
+    $(function () {
+        bindMultipleSelect();
+        SelectedVerification();
+        MoveSelectAll();
+        FuzzSearch();
+    });
+
+    function FuzzSearch(ele) {
+        var search_text = $(ele).val().toUpperCase();
+        $(ele).parent().next().children().each(function () {
+            if ($(this).text().toUpperCase().search(search_text) != -1) {
+                $(this).show()
+            } else {
+                $(this).hide()
+            }
+        })
+    }
+
+    function bindMultipleSelect(from_select, to_select) {
+        $('#' + from_select).on('dblclick', 'option', function () {
+            var option = $(this)[0];
+            $('#' + to_select).append(option);
+        });
+    }
+
+    function MoveSelectAll(from_select, to_select) {
+        $('#' + from_select).children().each(function () {
+            var child = $(this);
+            $('#' + to_select).append(child)
+        })
+    }
+
+    function SelectedVerification() {
+        $('#form').on('submit', function () {
+            $('select[tag] option').prop('selected', true)
+        })
+    }
+</script>

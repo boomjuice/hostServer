@@ -24,17 +24,7 @@ class BatchTaskHandler(object):
         """调用任务"""
         self.task_parser()
 
-    def cmd(self):
-        """批量命令
-        1. 生成任务在数据库的记录，拿到任务id
-        2. 触发任务，不阻塞
-        3.返回任务id给前端
-        """
-        task_obj = Tasks.objects.create(
-            task_type='cmd',
-            content=self.task_arguments.get('cmd'),
-            user=self.request.user,
-        )
+    def create_subprocess(self, task_obj):
         selected_hosts = set(self.task_arguments.get('selected_hosts'))
         task_obj_list = []
         for id in selected_hosts:
@@ -46,6 +36,27 @@ class BatchTaskHandler(object):
 
         cmd_process = subprocess.Popen(task_script, shell=True)
 
-        print("running batch commands....")
+        print("running batch tasks....")
 
         self.task_obj = task_obj
+
+    def cmd(self):
+        """批量命令
+        1. 生成任务在数据库的记录，拿到任务id
+        2. 触发任务，不阻塞
+        3.返回任务id给前端
+        """
+        task_obj = Tasks.objects.create(
+            task_type='cmd',
+            content=self.task_arguments.get('cmd'),
+            user=self.request.user,
+        )
+        self.create_subprocess(task_obj)
+
+    def file_transfer(self):
+        task_obj = Tasks.objects.create(
+            task_type='file_transfer',
+            content=json.dumps(self.task_arguments),
+            user=self.request.user,
+        )
+        self.create_subprocess(task_obj)

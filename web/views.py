@@ -42,6 +42,11 @@ def batch_cmd_control(request):
     return render(request, 'host_control.html')
 
 
+@login_required()
+def batch_file_transfer(request):
+    return render(request, 'file_transfer.html')
+
+
 def batch_task_mgr(request):
     task_obj = BatchTaskHandler(request)
     response = {
@@ -61,3 +66,8 @@ def get_task_result(request):
     task_obj = list(TaskLogDetail.objects.filter(task_id=task_id).values('id', 'status', 'result'))
 
     return HttpResponse(json.dumps(task_obj))
+
+
+@login_required()
+def tasks_log(request):
+    return render(request, 'task_log_detail.html')

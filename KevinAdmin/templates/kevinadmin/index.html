@@ -1,0 +1,30 @@
+{% extends 'kevinadmin/config_base.html' %}
+{% block content %}
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1>
+                配置管理
+                <small>DataBase Config</small>
+            </h1>
+            <ol class="breadcrumb">
+                <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
+                <li class="active">配置</li>
+            </ol>
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+            {% block table_content %}
+
+
+            {% endblock %}
+        </section>
+    </div>
+
+    {% block js %}
+        <script>
+            $('#config').addClass('active');
+        </script>
+    {% endblock %}
+{% endblock %}

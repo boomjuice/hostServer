@@ -1,0 +1,36 @@
+{% extends 'kevinadmin/index.html' %}
+{% load kevinadmin_tags %}
+{% block table_content %}
+    <h1 class="page-header">{% get_model_name_upper admin_class %}</h1>
+    {% if queryset_list %}
+        <h2> 批量删除</h2>
+        {% for queryset in queryset_list %}
+            <div class="alert alert-danger" style="width: 500px" role="alert">注意：以下与{{ queryset }}相关联的数据都会被删除</div>
+            {% get_related_fk_dispaly queryset as get_dispaly %}
+            {{ get_dispaly | safe }}
+        {% endfor %}
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" value="{{ id_list }}" name="id_list">
+            <input type="submit" value="确认删除" class="btn btn-danger" style="margin: 0 20px 0 10px">
+            <a class="btn btn-default"
+                    href="/kevin-admin/{% get_app_name_lower admin_class %}/{% get_model_name_lower admin_class %}/">
+                返回编辑</a>
+        </form>
+    {% endif %}
+    {% if obj %}
+        <div class="alert alert-danger" role="alert">注意：以下与{{ obj }}相关联的数据都会被删除</div>
+        {% get_related_fk_dispaly obj as get_dispaly %}
+        {{ get_dispaly | safe }}
+        <form method="post">
+            {% csrf_token %}
+            <input type="submit" value="确认删除" class="btn btn-danger" style="margin-left: 20px">
+            <a class="btn btn-default" href="/kevin-admin/{{ app_name }}/{{ table_name }}/{{ obj_id }}/change">返回编辑</a>
+        </form>
+    {% endif %}
+
+
+
+
+
+{% endblock %}

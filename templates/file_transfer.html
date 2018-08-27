@@ -5,15 +5,14 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                批量命令
+                批量文件传输
                 <small>Optional description</small>
             </h1>
             <ol class="breadcrumb">
                 <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
-                <li class="active">批量命令</li>
+                <li class="active">批量文件传输</li>
             </ol>
         </section>
-
         <!-- Main content -->
         <section class="content">
             <div class="row">
@@ -28,9 +27,15 @@
                             </div>
                         </div><!-- /.box-header -->
                         <div class="box-body">
-                            <textarea name="cmd" id="cmd_input" rows="2" class="form-control"></textarea>
+                            <select name="filter_transfer" id="filter_task_type" class="form-control"
+                                    onchange="FileType(this)">
+                                <option value="send">向远程上传文件</option>
+                                <option value="get">从远程下载文件</option>
+                            </select>
+                            <input type="text" placeholder="本地文件路径" id="local_file_path" class="form-control">
+                            <input type="text" placeholder="远程文件路径" id="remote_file_path" class="form-control">
                             <button id='task_submit' class="btn bg-purple btn-flat margin pull-right"
-                                    onclick="return AjaxCmd(this,'cmd')">执行命令
+                                    onclick="return AjaxCmd(this, 'filter-transfer')">执行
                             </button>
                         </div>
                     </div>
@@ -55,9 +60,9 @@
 
     {% include 'batch_task_js.html' %}
     {% block js %}
-    <script>
+        <script>
         $('#menu').addClass('active');
-        $('#cmd').addClass('active')
+        $('#file').addClass('active')
     </script>
     {% endblock %}
 {% endblock %}

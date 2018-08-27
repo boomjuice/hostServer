@@ -36,7 +36,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'web',
-    'backend'
+    'backend',
+    'KevinAdmin'
 ]
 
 MIDDLEWARE = [
@@ -54,7 +55,8 @@ ROOT_URLCONF = '堡垒机.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')]
+        'DIRS': [os.path.join(BASE_DIR, 'templates'),
+                 os.path.join(BASE_DIR, '/KevinAdmin/templates')]
         ,
         'APP_DIRS': True,
         'OPTIONS': {
@@ -116,6 +118,8 @@ USE_TZ = True
 AUTH_USER_MODEL = 'web.Userprofile'
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static')
+    os.path.join(BASE_DIR, 'static'),
+    os.path.join(BASE_DIR, 'static'),
 ]
 LOGIN_URL = '/login/'
+DOWNLOAD_DIR = '%s/downloads' % BASE_DIR

@@ -1,0 +1,14 @@
+{% extends 'kevinadmin/index.html' %}
+{% load kevinadmin_tags %}
+{% block table_content %}
+    <ol class="breadcrumb">
+        <li><a href="/kevin-admin/">Home</a></li>
+        <li><a href="/kevin-admin/{{ app_name }}/">{{ app_name }}</a></li>
+        <li><a href="/kevin-admin/{{ app_name }}/{{ table_name }}">{% get_model_verbose_name admin_class %}</a></li>
+        <li class="active">Add {% get_model_verbose_name admin_class %}</li>
+    </ol>
+    <h1 class="page-header">{% get_model_name_upper admin_class %}</h1>
+    <h3 style="margin-left: 50px"> 添加 </h3>
+ {% include 'kevinadmin/table_obj_mould.html' %}
+
+{% endblock %}

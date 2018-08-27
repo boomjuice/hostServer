@@ -1,0 +1,51 @@
+{% extends 'kevinadmin/index.html' %}
+{% block table_content %}
+    {% for app_name, app_tables in site.enabled_admins.items %}
+        {% if  single_name %}
+            {% if app_name == single_name %}
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>{{ app_name }}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for table_name in app_tables %}
+                        <tr>
+                            <td><a style="text-decoration: none" href="{% url 'table_obj_list' app_name table_name %}">
+                                {{ table_name.capitalize }}</a></td>
+                            <td><a href="/kevin-admin/{{ app_name }}/{{ table_name }}/add"
+                                   style="text-decoration: none">
+                                <i class="glyphicon glyphicon-plus" style="color: #5cb85c"></i> ADD</a></td>
+                            <td><a href="/kevin-admin/{{ app_name }}/{{ table_name }}/" style="text-decoration: none">
+                                <i class="glyphicon glyphicon-edit" style="color: #f0ad4e"></i> Change</a></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+        {% else %}
+             <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>{{ app_name }}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for table_name in app_tables %}
+                        <tr>
+                            <td><a style="text-decoration: none" href="{% url 'table_obj_list' app_name table_name %}">
+                                {{ table_name.capitalize }}</a></td>
+                            <td><a href="/kevin-admin/{{ app_name }}/{{ table_name }}/add"
+                                   style="text-decoration: none">
+                                <i class="glyphicon glyphicon-plus" style="color: #5cb85c"></i> ADD</a></td>
+                            <td><a href="/kevin-admin/{{ app_name }}/{{ table_name }}/" style="text-decoration: none">
+                                <i class="glyphicon glyphicon-edit" style="color: #f0ad4e"></i> Change</a></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+        {% endif %}
+    {% endfor %}
+
+{% endblock %}

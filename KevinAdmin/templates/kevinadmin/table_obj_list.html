@@ -1,0 +1,121 @@
+{% extends 'kevinadmin/index.html' %}
+{% load kevinadmin_tags %}
+{% block table_content %}
+    <ol class="breadcrumb">
+        <li><a href="/kevin-admin/">Home</a></li>
+        <li><a href="/kevin-admin/{{ app_name }}/">{{ app_name }}</a></li>
+        <li class="active">{% get_model_verbose_name admin_class %}</li>
+    </ol>
+    <h1 class="page-header">AppShow</h1>
+    <div class="container-fluid">
+        <form class="form-inline">
+            <div class="col-md-10">
+                <input style='width: 400px' type="search" class="form-control" name="_q"
+                       placeholder="{% for i in admin_class.search_fields %}{{ i }},{% endfor %}"
+                       value="{{ admin_class.search_condition }}">
+                <input type="submit" value="Search" class='btn btn-success'>
+                {% for k,v in admin_class.filter_conditions.items %}
+                    <input type="hidden" name="{{ k }}" value="{{ v }}">
+                {% endfor %}
+            </div>
+        </form>
+
+        <a href="add" class="btn btn-info">添加新数据</a>
+
+        <hr>
+        <div class="row">
+            {% if admin_class.list_filter %}
+                <form>
+                    {% for filter_condition in admin_class.list_filter %}
+                        {% build_filter_ele filter_condition admin_class %}
+                    {% endfor %}
+                    <input type="hidden" name="_o" value="{% get_order_index order_conditions %}">
+                    <input type="submit" value="过滤" class="btn btn-success" style="margin-top: 20px">
+                </form>
+                <hr>
+            {% endif %}
+        </div>
+        <form method="post" onsubmit="return ActionCheck(this)">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-xs-1" style="line-height: 34px">
+                    Action:
+                </div>
+                <div class="col-lg-6">
+                    <select class="form-control" name="action">
+                        <option value="">------------</option>
+                        {% for action in admin_class.actions %}
+                            <option value="{{ action }}">{{ action }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-lg-2">
+                    <input type="submit" class="btn btn-default" value="Go">
+                </div>
+            </div>
+        </form>
+    </div>
+    <hr>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            {% if admin_class.list_display %}
+                <th><input type="checkbox" onclick=" SelectAll(this)"></th>
+                {% for list_name in admin_class.list_display %}
+
+                    <th>
+                        <a href="?_o={% order_href_build list_name forloop.counter0 order_conditions %}{% filter_conditions_build admin_class %}">
+                            {{ list_name }}
+                            {% get_order_icon list_name order_conditions %}
+                        </a>
+                    </th>
+                {% endfor %}
+            {% else %}
+                <th>{% get_model_name_upper admin_class %}</th>
+            {% endif %}
+
+        </tr>
+        </thead>
+        <tbody>
+        {% for obj in queryset %}
+            <tr>
+                <td><input type="checkbox" value="{{ obj.id }}" row-select='true'></td>
+                {% build_data_from_th obj admin_class %}</tr>
+        {% endfor %}
+
+        </tbody>
+    </table>
+    <ul class="pagination">
+        {{ page_str }}
+    </ul>
+
+    <script>
+        function SelectAll(ele) {
+            if ($(ele).prop('checked')) {
+                $('input[row-select]').prop('checked', true)
+            } else {
+                $('input[row-select]').prop('checked', false)
+            }
+        }
+
+        function ActionCheck(ele) {
+            var selected_action = $("select[name='action']").val();
+            var checked_objs = $('input[row-select]').filter(':checked');
+            if (!selected_action) {
+                alert("no action selected");
+                return false
+            }
+            if (checked_objs.length == 0) {
+                alert("no checkbox checked");
+                return false
+            } else {
+                var id_list = [];
+                $.each(checked_objs, function () {
+                    id_list.push($(this).val());
+                });
+                var input = "<input type='hidden' name='id_list' value=" + JSON.stringify(id_list) + ">";
+                $(ele).append(input);
+            }
+        }
+    </script>
+{% endblock %}
